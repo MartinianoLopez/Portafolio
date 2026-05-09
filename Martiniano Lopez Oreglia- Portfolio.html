@@ -1,0 +1,702 @@
+<!DOCTYPE html>
+<!-- Especial Thanks to Lukasz Jakowski for the portafolio Disign -->
+<html lang="en"><head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Martiniano Lopez Oreglia - Portfolio</title>
+	<meta name="keywords" content="Martiniano Lopez Oreglia, java, android, c++, game developer, programming, sdl, html, css, ">
+	<meta name="description" content="Martiniano Lopez Oreglia - Portfolio Android, C++, JAVA, SDL, HTML, CSS">	
+	<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+	<meta name="author" content="Martiniano Lopez Oreglia">
+	
+    <style>
+        :root {
+            --bg: #0a0a0a;
+            --bg-glass: rgba(10, 10, 10, 0.7);
+            --bg-overlay: rgba(5, 5, 5, 0.4);
+            --text-main: #e0e0e0;
+            --text-dim: #666;
+            --text-ghost: rgba(255,255,255,0.065);
+            --text-meme: rgba(255,255,255,0.13);
+            --card-bg: #111;
+            --sidebar-border: rgba(255,255,255,0.08);
+            --shadow: 0 20px 40px rgba(0,0,0,0.5);
+            --radius: 12px;
+			--card-w: 95vw;
+			--card-max-w: 650px;
+			--card-h: 280px;
+            --sidebar-w: 220px;
+            --nav-btn-bg: rgba(255, 255, 255, 0.05);
+            --accent: #fff;
+
+        }
+
+        body.light-mode {
+            --bg: #fafafa;
+            --bg-glass: rgba(250, 250, 250, 0.7);
+            --bg-overlay: rgba(255, 255, 255, 0.4);
+            --text-main: #000000;
+            --text-dim: #999;
+            --text-ghost: rgba(0,0,0,0.06);
+            --text-meme: rgba(0,0,0,0.12);
+            --card-bg: #fff;
+            --sidebar-border: rgba(0,0,0,0.1);
+            --shadow: 0 20px 40px rgba(0,0,0,0.08);
+            --nav-btn-bg: rgba(0, 0, 0, 0.1);
+            --accent: #000;
+        }
+
+        ::selection { background: var(--text-main); color: var(--bg); }
+
+        html, body {
+            margin: 0; padding: 0;
+            min-height: 100vh;
+            background: var(--bg);
+            font-family: 'Inter', -apple-system, sans-serif;
+            color: var(--text-main);
+            transition: background 0.4s ease, color 0.4s ease;
+            overflow-x: hidden;
+        }
+
+        /* --- PROJECT OVERLAY (STEAM STATION STYLE) --- */
+        #project-overlay {
+            position: fixed; inset: 0;
+            background: var(--bg-glass);
+            z-index: 300;
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            padding: 100px 20px;
+            overflow-y: auto;
+            opacity: 0;
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            transition: opacity 0.4s ease;
+        }
+        
+        #project-overlay.active { display: flex; opacity: 1; }
+        
+        .overlay-inner { width: 646px; transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1); transform: translateY(20px); }
+        #project-overlay.active .overlay-inner { transform: translateY(0); }
+
+        .overlay-header { width: 646px; margin-bottom: 40px; display: flex; justify-content: space-between; align-items: flex-end; }
+        .overlay-header h2 { font-family: 'Courier New', monospace; text-transform: uppercase; letter-spacing: 4px; margin: 0; font-size: 24px;}
+        
+        .overlay-close { background: none; border: 1px solid var(--text-dim); color: var(--text-dim); padding: 5px 15px; cursor: pointer; border-radius: 4px; font-family: 'Courier New', monospace; font-size: 10px; text-transform: uppercase; transition: 0.2s; }
+        .overlay-close:hover { color: var(--text-main); border-color: var(--text-main); }
+        
+        .overlay-hero-img { width: 100%; height: auto; border-radius: 8px; margin-bottom: 30px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); border: 1px solid var(--sidebar-border); }
+        .overlay-body { font-size: 15px; line-height: 1.8; color: var(--text-main); padding-bottom: 100px; font-family: 'Inter', sans-serif; }
+
+        /* --- STEAM HUB --- */
+        #steam-station {
+            position: fixed; inset: 0;
+            background: var(--bg-glass);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            z-index: 200;
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            padding: 100px 20px;
+            overflow-y: auto;
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+        #steam-station.active { display: flex; opacity: 1; }
+        .station-header { width: 646px; margin-bottom: 40px; display: flex; justify-content: space-between; align-items: flex-end; }
+        .station-header h2 { font-family: 'Courier New', monospace; text-transform: uppercase; letter-spacing: 4px; margin: 0; }
+        .close-station { background: none; border: 1px solid var(--text-dim); color: var(--text-dim); padding: 5px 15px; cursor: pointer; border-radius: 4px; font-family: 'Courier New', monospace; font-size: 10px; }
+        .close-station:hover { color: var(--text-main); border-color: var(--text-main); }
+        .widget-grid { display: flex; flex-direction: column; gap: 20px; width: 646px; }
+        .steam-widget { border-radius: 8px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.5); border: none; }
+        
+        /* Mobile Link Style Update */
+        .mobile-link-card { 
+            background: var(--nav-btn-bg);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            border: 1px solid var(--sidebar-border); 
+            border-radius: 8px; 
+            padding: 20px; 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            text-decoration: none; 
+            transition: 0.3s ease;
+        }
+        .mobile-link-card:hover { border-color: var(--text-main); transform: translateY(-2px); background: rgba(255,255,255,0.08); }
+        .mobile-info h4 { margin: 0; font-family: 'Courier New', monospace; text-transform: uppercase; font-size: 14px; color: var(--text-main); }
+        .mobile-info span { font-size: 10px; color: var(--text-dim); font-weight: 900; letter-spacing: 1px; }
+        .store-tag { font-family: 'Courier New', monospace; font-size: 10px; font-weight: 900; border: 1px solid var(--text-dim); color: var(--text-main); padding: 6px 14px; border-radius: 4px; text-transform: uppercase; transition: 0.2s; }
+        .mobile-link-card:hover .store-tag { border-color: var(--text-main); background: var(--text-main); color: var(--bg); }
+
+        /* --- CONTROLS --- */
+        .ghost-btn {
+            position: fixed; z-index: 100;
+            background: transparent; color: var(--text-dim);
+            border: 1px solid var(--sidebar-border); cursor: pointer;
+            transition: all 0.3s ease; opacity: 0.6;
+            font-family: 'Inter', sans-serif;
+        }
+        .ghost-btn:hover { opacity: 1; color: var(--text-main); border-color: var(--text-main); }
+        .theme-toggle { top: 30px; left: 30px; width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; font-size: 16px; border-radius: 50%; }
+        .bottom-controls { position: fixed; bottom: 30px; left: 30px; display: flex; gap: 10px; z-index: 100; }
+        .meme-btn, .collapse-btn { padding: 8px 16px; font-size: 11px; font-weight: 600; border-radius: 6px; position: static; }
+
+        /* --- BACKGROUND DRIFT --- */
+        #time-container { position: fixed; inset: 0; pointer-events: none; z-index: 0; overflow: hidden; }
+        .drifting-text { position: absolute; font-family: 'Courier New', monospace; font-weight: 900; color: var(--text-ghost); animation: drift var(--speed) linear infinite; white-space: nowrap; text-transform: uppercase; user-select: none; pointer-events: none; }
+        .drifting-text.meme-track { color: var(--text-meme); font-style: italic; }
+
+        @keyframes drift {
+            0% { transform: translateY(-10%) rotate(var(--rot)); opacity: 0; }
+            15% { opacity: 1; }
+            85% { opacity: 1; }
+            100% { transform: translateY(110vh) rotate(var(--rot)); opacity: 0; }
+        }
+
+        /* --- HEADER --- */
+        header#main-header { position: relative; z-index: 50; height: 160px; display: flex; flex-direction: column; align-items: center; justify-content: center; transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1); }
+        body.collapsed header#main-header { transform: translateY(calc(50vh - 80px)); }
+        .hero-name-container { display: inline-block; position: relative; padding: 10px 40px; text-align: center; cursor: pointer; transition: transform 0.2s ease; user-select: none; }
+        .hero-name { font-size: 52px; font-weight: 900; margin: 0; letter-spacing: -2px; font-family: 'Courier New', monospace; text-transform: uppercase; position: relative; z-index: 5; opacity: 0; animation: titleSlideIn 1.2s cubic-bezier(0.16, 1, 0.3, 1) forwards; animation-delay: 0.2s; }
+        .hero-name.ghost-active::before { content: "Martiniano Lopez Oreglia"; position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; opacity: 0.7; color: #0ff; animation: ghost-left 0.4s infinite; }
+        .hero-name.ghost-active::after { content: "Martiniano Lopez Oreglia"; position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; opacity: 0.7; color: #f0f; animation: ghost-right 0.4s infinite; }
+
+        @keyframes ghost-left { 0%, 100% { transform: translate(0); } 25% { transform: translate(-4px, 2px); } 75% { transform: translate(-2px, -2px); } }
+        @keyframes ghost-right { 0%, 100% { transform: translate(0); } 25% { transform: translate(4px, -2px); } 75% { transform: translate(2px, 2px); } }
+        @keyframes titleSlideIn { 0% { transform: translateY(-30px); opacity: 0; } 100% { transform: translateY(0); opacity: 1; } }
+        
+        .hero-subtitle { font-family: 'Courier New', monospace; font-size: 10px; font-weight: 900; text-transform: uppercase; letter-spacing: 5px; color: var(--text-main); margin-top: 5px; position: relative; z-index: 2; opacity: 0; animation: fadeIn 1s ease forwards; animation-delay: 1s; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 0.6; } }
+        #header-fx { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 1; }
+
+        /* --- CONTENT --- */
+        .archive-outer-wrapper { display: flex; justify-content: center; width: 100%; position: relative; z-index: 10; transition: opacity 0.5s ease, transform 0.6s cubic-bezier(0.16, 1, 0.3, 1); }
+        body.collapsed .archive-outer-wrapper { opacity: 0; transform: translateY(40px); pointer-events: none; }
+        .archive-container {
+			display: flex;
+			flex-direction: row;
+			align-items: flex-start;
+			gap: 40px;
+			width: 100%;
+			max-width: 1200px; /* Overall layout width */
+			padding: 0 20px;
+		}
+        .layout-spacer { width: var(--sidebar-w); flex-shrink: 0; }
+        .project-list {
+			width: 100%;
+			max-width: var(--card-max-w);
+			display: flex;
+			flex-direction: column;
+			gap: 40px;
+		}
+        .project-card { 
+			position: relative; 
+			width: 100%; /* Fill the container */
+			max-width: var(--card-max-w);
+			height: var(--card-h); 
+			flex-shrink: 0;
+			border-radius: var(--radius); 
+			overflow: hidden; 
+			box-shadow: var(--shadow); 
+			background: var(--card-bg); 
+			transition: box-shadow 0.4s ease, transform 0.3s ease; 
+		}
+        .project-img { 
+			width: 100%;
+			height: var(--card-h); 
+			display: flex; 
+			overflow: hidden; 
+			position: relative; 
+			background: #111; 
+		}
+        .project-img img { width: 100%; height: 100%; flex-shrink: 0; object-fit: cover; transition: transform 0.6s cubic-bezier(0.165, 0.84, 0.44, 1); transform-origin: center center; }
+        .project-card:hover .project-img img { transform: scale(1.08); }
+        .project-header { position: absolute; top: 0; left: 0; right: 0; padding: 20px; z-index: 10; background: linear-gradient(to bottom, rgba(0,0,0,0.85) 0%, transparent 100%); color: #fff; pointer-events: none; }
+        
+        .title-group a { text-decoration: none; color: inherit; pointer-events: auto; display: inline-block; transition: 0.2s; cursor: pointer; }
+        .title-group a:hover { opacity: 0.7; transform: translateX(5px); }
+        .title-group h2 { font-family: 'Courier New', monospace; font-size: 19px; margin: 0; text-transform: uppercase; }
+        
+        .type-status { font-size: 10px; font-weight: 900; opacity: 0.8; letter-spacing: 1px; display: block; margin-top: 4px; font-family: 'Courier New', monospace; min-height: 1.2em; }
+        .platform-dock { position: absolute; bottom: 15px; right: 20px; display: flex; gap: 8px; z-index: 20; }
+        .platform-link { text-decoration: none; color: #fff; background: rgba(0, 0, 0, 0.4); backdrop-filter: blur(8px); border: 1px solid rgba(255, 255, 255, 0.2); font-size: 9px; font-weight: 900; padding: 6px 14px; border-radius: 4px; text-transform: uppercase; transition: 0.2s; }
+        .platform-link:hover { background: #fff; color: #000; border-color: #fff; transform: translateY(-2px); }
+        .nav-next { position: absolute; right: 20px; top: 50%; transform: translateY(-50%); width: 40px; height: 40px; background: var(--nav-btn-bg); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.2); color: white; border-radius: 50%; display: none; align-items: center; justify-content: center; cursor: pointer; z-index: 30; font-family: monospace; font-weight: 900; opacity: 0; transition: 0.3s; }
+        .project-card:hover .nav-next { opacity: 1; }
+
+        /* --- LEGACY --- */
+        .legacy-trigger { padding: 15px 0; display: flex; justify-content: center; align-items: center; gap: 15px; cursor: pointer; background: transparent; transition: opacity 0.3s ease; user-select: none; opacity: 0.3; }
+        .legacy-trigger:hover { opacity: 0.8; }
+        .legacy-trigger h3 { font-family: 'Courier New', monospace; font-size: 11px; margin: 0; text-transform: uppercase; letter-spacing: 2px; color: var(--text-main); font-weight: normal; }
+        .legacy-status { font-family: 'Courier New', monospace; font-size: 11px; color: var(--text-main); font-weight: normal; }
+        .legacy-content {
+			display: flex;
+			flex-direction: column;
+			gap: 40px;
+			max-height: 0;
+			overflow: hidden; /* Keeps it hidden when closed */
+			transition: max-height 0.8s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.4s;
+			opacity: 0;
+		}
+        .legacy-archive-section.is-expanded .legacy-content { 
+			max-height: none; /* Allows the list to be as long as needed */
+			opacity: 1; 
+			padding-bottom: 50px; 
+		}
+
+        /* --- SIDEBAR --- */
+        .sidebar-wrapper { width: var(--sidebar-w); flex-shrink: 0; position: sticky; top: 40px; height: fit-content; }
+        .side-section { border-left: 1px solid var(--sidebar-border); padding-left: 20px; margin-bottom: 40px; transition: border-color 0.4s ease; }
+        .side-section h3 { font-family: 'Courier New', monospace; font-size: 10px; text-transform: uppercase; letter-spacing: 2px; margin: 0 0 15px 0; color: var(--text-dim); }
+        .side-link { display: block; color: var(--text-main); text-decoration: none; font-size: 12px; font-weight: 800; text-transform: uppercase; padding: 4px 10px; margin-left: -10px; transition: 0.2s; border-radius: 4px; width: fit-content; cursor: pointer; opacity: 0.7; }
+        .side-link:hover { background: var(--text-main); color: var(--bg); transform: translateX(8px); opacity: 1; }
+
+        /* EMAIL SPECIFIC STYLE */
+        .email-text { 
+            display: block; 
+            color: var(--text-main); 
+            font-size: 12px; 
+            font-weight: 800; 
+            text-transform: none; 
+            padding: 4px 10px; 
+            margin-left: -10px; 
+            transition: 0.2s; 
+            border-radius: 4px; 
+            width: fit-content; 
+            user-select: text;
+            opacity: 0.7;
+        }
+        .email-text:hover {
+            background: var(--text-main); 
+            color: var(--bg); 
+            transform: translateX(8px);
+            opacity: 1;
+        }
+        /* FIXED: Selection persistent colors */
+        .email-text::selection {
+            background: var(--text-dim);
+            color: var(--accent);
+        }
+
+        .system-stat { font-family: 'Courier New', monospace; font-size: 10px; color: var(--text-dim); text-transform: uppercase; line-height: 1.8; opacity: 0.6; }
+
+        @media (max-width: 1050px) {
+			.layout-spacer { display: none; }
+			
+			.archive-container { 
+				flex-direction: column; 
+				align-items: center; /* Centers the list and sidebar */
+				padding: 0 15px;
+			}
+			
+			.sidebar-wrapper { 
+				position: relative; 
+				top: 0; 
+				width: 100%; 
+				max-width: var(--card-max-w); 
+				padding-top: 40px; 
+			}
+
+			.side-section {
+				border-left: 1px solid var(--sidebar-border);
+				padding-left: 20px;
+				margin-bottom: 30px;
+			}
+			
+			/* Steam Hub sizing for mobile */
+			.station-header, .overlay-header, .widget-grid, .overlay-inner {
+				width: 100%;
+				max-width: var(--card-max-w);
+			}
+			
+			.steam-widget {
+				width: 100%; /* Widgets will now scale down */
+			}
+		}
+    </style>
+</head>
+<body>
+
+    <div id="project-overlay">
+        <div class="overlay-header">
+            <h2 id="overlay-title"></h2>
+            <button class="overlay-close" id="close-overlay">CLOSE</button>
+        </div>
+        <div class="overlay-inner">
+            <img id="overlay-img" src="" class="overlay-hero-img">
+            <div id="overlay-body" class="overlay-body"></div>
+        </div>
+    </div>
+
+    <button class="ghost-btn theme-toggle" id="theme-btn">◑</button>
+    
+    <div class="bottom-controls">
+        <button class="ghost-btn meme-btn" id="meme-trigger">Rain Button</button>
+    </div>
+    
+    <div id="time-container">
+  <!-- LEFT ZONE: 0–30vw -->
+  <div class="drifting-text" style="left:2vw;  font-size:18px;   --speed:24.8s; --rot:6.1deg;  animation-delay:-3s;">C++</div>
+  <div class="drifting-text" style="left:6vw;  font-size:14px;   --speed:17.5s; --rot:8deg;    animation-delay:-9s;">HTML5</div>
+  <div class="drifting-text" style="left:11vw; font-size:16.8px; --speed:19.5s; --rot:-5.3deg; animation-delay:-2s;">SQL</div>
+  <div class="drifting-text" style="left:4vw;  font-size:20px;   --speed:22.8s; --rot:-2.9deg; animation-delay:-14s;">Java</div>
+  <div class="drifting-text" style="left:15vw; font-size:14.6px; --speed:20.5s; --rot:-1.7deg; animation-delay:-19s;">Kotlin</div>
+  <div class="drifting-text" style="left:8vw;  font-size:15px;   --speed:16.7s; --rot:7.7deg;  animation-delay:-6s;">Python</div>
+  <div class="drifting-text" style="left:20vw; font-size:17px;   --speed:23s;   --rot:-4deg;   animation-delay:-11s;">Vue.js</div>
+  <div class="drifting-text" style="left:3vw;  font-size:16px;   --speed:18.2s; --rot:3.5deg;  animation-delay:-21s;">Docker</div>
+  <div class="drifting-text" style="left:13vw; font-size:15.5px; --speed:21s;   --rot:-6deg;   animation-delay:-1s;">Git</div>
+  <div class="drifting-text" style="left:25vw; font-size:14px;   --speed:19s;   --rot:5deg;    animation-delay:-16s;">Bash</div>
+  <div class="drifting-text" style="left:7vw;  font-size:17.5px; --speed:25s;   --rot:-3deg;   animation-delay:-8s;">Firebase</div>
+  <div class="drifting-text" style="left:18vw; font-size:15px;   --speed:20s;   --rot:9deg;    animation-delay:-24s;">Flutter</div>
+  <div class="drifting-text" style="left:28vw; font-size:16px;   --speed:22s;   --rot:-2deg;   animation-delay:-5s;">CSS3</div>
+  <div class="drifting-text" style="left:10vw; font-size:18px;   --speed:17s;   --rot:4deg;    animation-delay:-27s;">Node.js</div>
+
+  <!-- RIGHT ZONE: 60–90vw -->
+  <div class="drifting-text" style="left:63vw; font-size:18.8px; --speed:21.9s; --rot:4.3deg;  animation-delay:-4s;">JavaScript</div>
+  <div class="drifting-text" style="left:82vw; font-size:16.5px; --speed:24s;   --rot:-9.1deg; animation-delay:-7s;">CSS3</div>
+  <div class="drifting-text" style="left:88vw; font-size:19.6px; --speed:22.4s; --rot:-9.4deg; animation-delay:-13s;">React.js</div>
+  <div class="drifting-text" style="left:71vw; font-size:21.6px; --speed:20.8s; --rot:0.9deg;  animation-delay:-10s;">Spring Boot</div>
+  <div class="drifting-text" style="left:85vw; font-size:14.6px; --speed:26s;   --rot:-1.5deg; animation-delay:-20s;">Next.js</div>
+  <div class="drifting-text" style="left:65vw; font-size:15px;   --speed:18.5s; --rot:6deg;    animation-delay:-17s;">Express.js</div>
+  <div class="drifting-text" style="left:78vw; font-size:16px;   --speed:23.5s; --rot:-4deg;   animation-delay:-2s;">Postman</div>
+  <div class="drifting-text" style="left:91vw; font-size:15.5px; --speed:19.8s; --rot:3deg;    animation-delay:-22s;">Vercel</div>
+  <div class="drifting-text" style="left:68vw; font-size:17px;   --speed:21s;   --rot:-7deg;   animation-delay:-12s;">Git</div>
+  <div class="drifting-text" style="left:83vw; font-size:18px;   --speed:16.5s; --rot:5.5deg;  animation-delay:-9s;">Docker</div>
+  <div class="drifting-text" style="left:74vw; font-size:14px;   --speed:24.5s; --rot:-2deg;   animation-delay:-25s;">Firebase</div>
+  <div class="drifting-text" style="left:61vw; font-size:20px;   --speed:22s;   --rot:8deg;    animation-delay:-6s;">Java</div>
+  <div class="drifting-text" style="left:89vw; font-size:16.5px; --speed:20s;   --rot:-6deg;   animation-delay:-15s;">Python</div>
+  <div class="drifting-text" style="left:76vw; font-size:15px;   --speed:17.5s; --rot:4deg;    animation-delay:-28s;">Bash</div>
+</div>
+
+    <header id="main-header">
+        <div class="hero-name-container" id="hero-trigger">
+            <canvas id="header-fx" width="518" height="96"></canvas>
+            <h1 class="hero-name" id="main-title">Martiniano Lopez Oreglia</h1>
+            <div class="hero-subtitle">Software developer // Programmer </div>
+        </div>
+    </header>
+
+    <div class="archive-outer-wrapper" id="content-wrapper">
+        <div class="archive-container">
+            <div class="layout-spacer"></div>
+            <main class="project-list">
+                
+                <article class="project-card">
+                    <div class="project-header">
+                        <div class="title-group">
+                            <a class="js-open-project" data-title="Grand Strategy Game" data-img="/Martiniano Lopez Oreglia Portafolio/Grand strategy game/screenshot-2026-05-07_16-37-54.png" data-desc="">
+                                <h2>Grand Strategy Game</h2>
+                            </a>
+                            <span class="type-status" data-final="April 2026" data-done="false">April 2026</span>
+                        </div>
+                    </div>
+                    <div class="platform-dock">
+						<a href="https://github.com/MartinianoLopez/GrandStrategyGame" target="_blank" class="platform-link">GitHub</a>
+					</div>
+                    <div class="project-img">
+                        <img src="/Martiniano Lopez Oreglia Portafolio/Grand strategy game/screenshot-2026-05-07_16-37-54.png" alt="Age of History 2: Definitive Edition">
+                        <img src="/Martiniano Lopez Oreglia Portafolio/Grand strategy game/screenshot-2026-04-13_18-30-48.png" alt="Age of History 2: Definitive Edition">
+						<img src="/Martiniano Lopez Oreglia Portafolio/Grand strategy game/screenshot-2026-04-30_17-52-16.png" alt="Age of History 2: Definitive Edition">
+                    </div>
+                    <div class="nav-next js-nav-next" style="display: flex;">&gt;</div>
+                </article>
+
+                <article class="project-card">
+                    <div class="project-header">
+                        <div class="title-group">
+                            <a class="js-open-project" data-title="Gravity" data-img="/Martiniano Lopez Oreglia Portafolio/gravity/screenshot-2026-03-26_19-29-40.png" data-desc="">
+                                <h2>Gravity</h2>
+                            </a>
+                            <span class="type-status" data-final="March 2026" data-done="true">March 2026</span>
+                        </div>
+                    </div>
+                      <div class="platform-dock">
+						<a href="https://github.com/MartinianoLopez/Gravity" target="_blank" class="platform-link">GitHub</a>
+                        <a href="https://martinianolopez.github.io/Gravity/" target="_blank" class="platform-link">Web Page</a>
+					</div>
+                    <div class="project-img">
+						<img src="/Martiniano Lopez Oreglia Portafolio/gravity/screenshot-2026-03-26_19-29-40.png" alt="Age of History 3 Logo">
+                        <img src="/Martiniano Lopez Oreglia Portafolio/gravity/screenshot-2026-03-26_14-27-38.png" alt="Age of History 3">
+					</div>
+                    <div class="nav-next js-nav-next" style="display: flex;">&gt;</div>
+                </article>
+				
+				<article class="project-card">
+                    <div class="project-header">
+                        <div class="title-group">
+                            <a class="js-open-project" data-title="Work Tracking App" data-img="Martiniano Lopez Oreglia Portafolio/workTrackingApp/combined.jpeg" data-desc="">
+                                <h2>Work Tracking App</h2>
+                            </a>
+                            <span class="type-status" data-final="Jan 2026" data-done="true">Jan 2026</span>
+                        </div>
+                    </div>
+                    <div class="platform-dock">
+					</div>
+                    <div class="project-img">
+                        <img src="Martiniano Lopez Oreglia Portafolio/workTrackingApp/combined.jpeg" alt="AoH 2">
+                        <img src="Martiniano Lopez Oreglia Portafolio/workTrackingApp/combined2.jpeg" alt="AoH 2">
+                    </div>
+                    <div class="nav-next js-nav-next">&gt;</div>
+                </article>
+
+                <div class="legacy-archive-section">
+                    <div class="legacy-trigger" id="legacy-toggle">
+                        <h3>Archived Projects</h3>
+                        <span class="legacy-status" id="legacy-label">[ + ]</span>
+                    </div>
+                    <div class="legacy-content">
+						<article class="project-card">
+							<div class="project-header">
+								<div class="title-group">
+									<a class="js-open-project" data-title="AI PC BUILDER" data-img="Martiniano Lopez Oreglia Portafolio/WhatsApp Image 2026-05-08 at 20.24.12.jpeg" data-desc="">
+										<h2>AI PC BUILDER</h2>
+									</a>
+									<span class="type-status" data-final="July 2025" data-done="true">July 2025</span>
+								</div>
+							</div>
+							<div class="platform-dock">
+                                <a href="https://github.com/MartinianoLopez/AI_PC_BUILDER_PROJECT" target="_blank" class="platform-link">GitHub</a>
+                            </div>
+							<div class="project-img">
+								<img src="Martiniano Lopez Oreglia Portafolio/WhatsApp Image 2026-05-08 at 20.24.12.jpeg" alt="BuscaMinas">
+                                <img src="Martiniano Lopez Oreglia Portafolio/WhatsApp Image 2026-05-08 at 20.23.21.jpeg" alt="BuscaMinas">
+							</div>
+							<div class="nav-next js-nav-next">&gt;</div>
+						</article>
+						
+                        <article class="project-card">
+                            							<div class="project-header">
+								<div class="title-group">
+									<a class="js-open-project" data-title="Busca Minas" data-img="Martiniano Lopez Oreglia Portafolio/image.png" data-desc="">
+										<h2>Busca Minas</h2>
+									</a>
+									<span class="type-status" data-final="april 2025" data-done="true">April 2025</span>
+								</div>
+							</div>
+							<div class="platform-dock">
+                                <a href="https://github.com/MartinianoLopez/BuscaMinas" target="_blank" class="platform-link">GitHub</a>
+                            </div>
+							<div class="project-img">
+								<img src="Martiniano Lopez Oreglia Portafolio/image.png" alt="BuscaMinas">
+							</div>
+                        </article>
+						
+                    </div>
+                </div>
+            </main>
+
+            <div class="sidebar-wrapper">
+                <aside class="sidebar">
+                    <div class="side-section">
+                        <h3>Contact</h3>
+                        <span class="email-text">martinianolopezoreglia@gmail.com</span>
+                    </div>
+					<div class="side-section">
+                        <h3>Socials</h3>
+                        <a target="_blank" href="https://www.linkedin.com/in/martinianolopezoreglia/" class="side-link">Linkedin</a>
+                        <a target="_blank" href="https://github.com/MartinianoLopez" class="side-link">GitHub</a>
+                    </div>
+                    <div class="side-section">
+                        <div class="system-stat">All rights reserved © 2023+</div>
+                    </div>
+                </aside>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const themeBtn = document.getElementById('theme-btn');
+        const mainTitle = document.getElementById('main-title');
+        const memeBtn = document.getElementById('meme-trigger');
+        const collapseBtn = document.getElementById('collapse-trigger');
+        const container = document.getElementById('time-container');
+        const trigger = document.getElementById('hero-trigger');
+        const station = document.getElementById('steam-station');
+        const openStation = document.getElementById('open-station');
+        const closeStation = document.getElementById('close-station');
+        
+        const projectOverlay = document.getElementById('project-overlay');
+        const overlayTitle = document.getElementById('overlay-title');
+        const overlayImg = document.getElementById('overlay-img');
+        const overlayBody = document.getElementById('overlay-body');
+        const closeOverlay = document.getElementById('close-overlay');
+
+        // Project Overlay Logic
+        document.querySelectorAll('.js-open-project').forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                overlayTitle.innerText = link.dataset.title;
+                overlayImg.src = link.dataset.img;
+                overlayBody.innerText = link.dataset.desc;
+                
+                projectOverlay.style.display = 'flex';
+                requestAnimationFrame(() => {
+                    requestAnimationFrame(() => {
+                        projectOverlay.classList.add('active');
+                    });
+                });
+                document.body.style.overflow = 'hidden';
+            });
+        });
+
+        closeOverlay.addEventListener('click', () => {
+            projectOverlay.classList.remove('active');
+            setTimeout(() => projectOverlay.style.display = 'none', 400);
+            document.body.style.overflow = '';
+        });
+
+        // Theme and UI
+        if (localStorage.getItem('theme') === 'light') document.body.classList.add('light-mode');
+        themeBtn.addEventListener('click', () => {
+            document.body.classList.toggle('light-mode');
+            localStorage.setItem('theme', document.body.classList.contains('light-mode') ? 'light' : 'dark');
+        });
+
+        trigger.addEventListener('click', () => {
+			mainTitle.classList.add('ghost-active');
+			trigger.style.transform = 'scale(1.05)';
+			
+			// Create the splash effect
+			for(let i = 0; i < 30; i++) {
+				particles.push(new Particle(true));
+			}
+
+			setTimeout(() => {
+				mainTitle.classList.remove('ghost-active');
+				trigger.style.transform = 'scale(1)';
+			}, 500);
+		});
+
+        // Legacy Toggle
+        const legacyToggle = document.getElementById('legacy-toggle');
+        const legacyLabel = document.getElementById('legacy-label');
+        legacyToggle.addEventListener('click', () => {
+            const parent = legacyToggle.parentElement;
+            const isExp = parent.classList.toggle('is-expanded');
+            legacyLabel.innerText = isExp ? '[ - ]' : '[ + ]';
+            if(isExp) runTypeEffect();
+        });
+
+        // Image Gallery
+        document.querySelectorAll('.project-card').forEach(card => {
+            const gallery = card.querySelector('.project-img');
+            const images = gallery.querySelectorAll('img');
+            const btnNext = card.querySelector('.js-nav-next');
+            let idx = 0;
+            if (images.length > 1 && btnNext) {
+                btnNext.style.display = 'flex';
+                btnNext.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    idx = (idx + 1) % images.length;
+                    gallery.scrollTo({ left: idx * gallery.offsetWidth, behavior: 'smooth' });
+                });
+            }
+        });
+
+        // Background Drift
+        const phrases =  ["C++", "Java", "JavaScript", "Python", "SQL", "HTML", "HTML5", "CSS", "CSS3", "React.js", "Next.js", "SpringBoot"];
+        const memePhrases = ["C++", "Java", "JavaScript", "Python", "SQL", "HTML", "HTML5", "CSS", "CSS3", "React.js", "Next.js", "SpringBoot"];
+
+        function spawn(isPre, isMeme = false) {
+            const el = document.createElement('div');
+            el.className = 'drifting-text' + (isMeme ? ' meme-track' : '');
+            const pool = isMeme ? memePhrases : phrases;
+            el.innerText = pool[Math.floor(Math.random() * pool.length)];
+            const speed = Math.random() * (isMeme ? 2 : 12) + (isMeme ? 3 : 15);
+            el.style.left = Math.random() * 95 + 'vw';
+            el.style.fontSize = Math.random() * 8 + (isMeme ? 18 : 14) + 'px';
+            el.style.setProperty('--speed', speed + 's');
+            el.style.setProperty('--rot', (Math.random() * 20 - 10) + 'deg');
+            if (isPre) el.style.animationDelay = (Math.random() * -speed) + 's';
+            container.appendChild(el);
+            setTimeout(() => el.remove(), speed * 1000);
+        }
+        for(let i=0; i<30; i++) spawn(true);
+        setInterval(() => spawn(false), 2000);
+
+        memeBtn.addEventListener('click', () => {
+            for(let i=0; i<15; i++) setTimeout(() => spawn(false, true), i * 100);
+        });
+
+        // Typewriter Effect
+        function runTypeEffect() {
+            document.querySelectorAll('.type-status').forEach((el, index) => {
+                const finalStr = el.getAttribute('data-final');
+                if(!finalStr || el.dataset.done) return;
+                const startStr = el.innerText;
+                el.dataset.done = "true";
+                setTimeout(() => deleteAndType(el, startStr, finalStr), index * 300 + 100);
+            });
+        }
+        function deleteAndType(el, current, target) {
+            if (current.length > 0) {
+                el.innerText = current.substring(0, current.length - 1);
+                setTimeout(() => deleteAndType(el, el.innerText.trim(), target), 30);
+            } else { typeNewText(el, target, 0); }
+        }
+        function typeNewText(el, target, i) {
+            if (i <= target.length) {
+                el.innerText = target.substring(0, i);
+                setTimeout(() => typeNewText(el, target, i + 1), 40);
+            }
+        }
+        window.addEventListener('load', runTypeEffect);
+
+        // Header FX
+        const canvas = document.getElementById('header-fx');
+        const ctx = canvas.getContext('2d');
+        let particles = [], isHovering = false;
+        function resize() { canvas.width = trigger.offsetWidth; canvas.height = trigger.offsetHeight; }
+        window.addEventListener('resize', resize); resize();
+
+        class Particle {
+			constructor(isExplosion = false) {
+				this.x = isExplosion ? canvas.width / 2 : Math.random() * canvas.width;
+				this.y = isExplosion ? canvas.height / 2 : canvas.height + 10;
+				this.size = Math.random() * 2 + 1;
+				// Explosions move in all directions, normal drift moves up
+				this.speedX = isExplosion ? (Math.random() - 0.5) * 8 : 0;
+				this.speedY = isExplosion ? (Math.random() - 0.5) * 8 : Math.random() * -0.8 - 0.4;
+				this.opacity = 1;
+				this.fade = Math.random() * 0.015 + 0.005;
+			}
+			update() { 
+				this.x += this.speedX;
+				this.y += this.speedY; 
+				this.opacity -= this.fade; 
+			}
+			draw() {
+				const color = getComputedStyle(document.body).getPropertyValue('--text-main').trim();
+				ctx.fillStyle = color.includes('rgb') ? color.replace('rgb', 'rgba').replace(')', `, ${this.opacity})`) : color;
+				ctx.fillRect(this.x, this.y, this.size, this.size);
+			}
+		}
+		
+        function animateFX() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            if (particles.length < (isHovering ? 50 : 5) && Math.random() < 0.2) particles.push(new Particle());
+            particles.forEach((p, i) => {
+                p.update(); p.draw();
+                if (p.opacity <= 0) particles.splice(i, 1);
+            });
+            requestAnimationFrame(animateFX);
+        }
+        trigger.addEventListener('mouseenter', () => isHovering = true);
+        trigger.addEventListener('mouseleave', () => isHovering = false);
+        animateFX();
+    </script>
+	<script type="text/javascript">
+	var _gaq = _gaq || [];
+	_gaq.push(['_setAccount', '']); // deactivated
+	_gaq.push(['_trackPageview']);
+
+	(function() {
+	var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+	ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+	})();
+</script>
+
+</body></html>
